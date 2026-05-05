@@ -1,59 +1,88 @@
-# Starterapp
+# Starter App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
+Angular 21 web app starter. No Ionic, no Capacitor — pure Angular for the browser.
 
-## Development server
+## Stack
 
-To start a local development server, run:
+- Angular 21 (standalone components)
+- Angular Router (lazy-loaded feature routes)
+- Angular Reactive Forms (add per feature)
+- Angular HttpClient (`provideHttpClient` in `app.config.ts`)
+- **Global theme:** plain CSS variables in `src/theme/tokens.css` (no Tailwind)
+- TypeScript 5.9 (strict mode)
+- Vitest (unit tests via `ng test`)
+- ESLint (`angular-eslint`) with `app` / `me-*` selector rules and basic layer import rules for `core` / `shared`
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── core/           Global infrastructure — guards, interceptors, services, models (see README inside)
+│   ├── shared/         Reusable UI (`me-*`), directives, pipes, utils
+│   ├── features/       Business domains — one folder per feature (`home` is a minimal shell only)
+│   ├── layout/         Shell with header and child `router-outlet`
+│   ├── app.ts          Root component
+│   ├── app.config.ts   Bootstrap
+│   └── app.routes.ts   Top-level routes (lazy layout + feature routes)
+├── theme/
+│   └── tokens.css      Design tokens (colors, spacing, typography)
+└── environments/       `environment.ts` / `environment.prod.ts` (`apiUrl`, etc.)
+```
+
+## Layer Rules
+
+```
+features/   ← safe to modify per feature
+shared/     ← request via catalog before adding new primitives (see shared/components/README.md)
+core/       ← tech lead review for app-wide changes
+```
+
+- Features must not import from other features (enforce further with `eslint-plugin-boundaries` if needed).
+- `shared` and `core` must not import from `features` (ESLint `no-restricted-imports` patterns).
+
+## Getting Started
 
 ```bash
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+App runs at `http://localhost:4200` and redirects to **`/home`** (placeholder shell).
 
-## Code scaffolding
+## Proxy (development)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+`proxy.config.ts` forwards `/api` → `http://localhost:8080`. Use empty `apiUrl` in `environment.ts` so calls can target `/api/...` during `ng serve`.
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Run Tests
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+## Lint
 
 ```bash
-ng e2e
+ng lint
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Build
 
-## Additional Resources
+```bash
+ng build
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Output: `dist/starterapp/`. Production build replaces `environment.ts` with `environment.prod.ts`.
+
+## Adding a New Feature
+
+1. Create `src/app/features/your-feature/`
+2. Add `your-feature.routes.ts` exporting a `Routes` array
+3. Lazy-load it from `app.routes.ts` (under the main layout `children`)
+4. Add pages under `features/your-feature/pages/`
+
+No auth example ships in this repo; add `features/auth` when you are ready.
+
+## Shared Components
+
+See [src/app/shared/components/README.md](src/app/shared/components/README.md). **`me-button`** is implemented; other rows are planned.

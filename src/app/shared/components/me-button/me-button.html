@@ -1,0 +1,12 @@
+<button
+	[type]="type()"
+	class="me-button"
+	[class.me-button--primary]="variant() === 'primary'"
+	[class.me-button--secondary]="variant() === 'secondary'"
+	[disabled]="isDisabled()"
+>
+	@if (loading()) {
+		<span class="me-button__spinner" aria-hidden="true"></span>
+	}
+	<ng-content />
+</button>

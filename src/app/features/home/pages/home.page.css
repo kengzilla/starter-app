@@ -1,0 +1,27 @@
+.home {
+	max-width: 40rem;
+}
+
+.home__title {
+	margin: 0 0 var(--space-md);
+	font-size: var(--font-size-2xl);
+	font-weight: var(--font-weight-semibold);
+	letter-spacing: -0.02em;
+}
+
+.home__lead {
+	margin: 0 0 var(--space-lg);
+	line-height: var(--line-height-relaxed);
+	color: var(--color-text-muted);
+}
+
+.home__lead code {
+	font-size: 0.9em;
+	padding: 0.125rem 0.375rem;
+	border-radius: var(--radius-sm);
+	background: var(--color-surface-elevated);
+}
+
+.home__actions {
+	margin: 0;
+}
