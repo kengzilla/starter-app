@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { MeButtonComponent } from '../../../shared/components';
+import { Button } from 'primeng/button';
 
 @Component({
 	selector: 'app-home-page',
 	standalone: true,
-	imports: [MeButtonComponent],
+	imports: [Button],
 	templateUrl: './home.page.html',
 	styleUrl: './home.page.css',
 })
