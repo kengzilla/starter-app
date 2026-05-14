@@ -8,4 +8,39 @@
 	<p class="home__actions">
 		<p-button label="Example PrimeNG button" icon="pi pi-check" />
 	</p>
+
+	<section class="home__api" aria-labelledby="home-api-health-heading">
+		<h2 id="home-api-health-heading" class="home__api-title">starter-api</h2>
+		<p class="home__api-lead">
+			Dev proxy maps <code>/api</code> to the API (see <code>proxy.config.ts</code>). Calls use
+			<code>{{ healthUrlHint }}</code>.
+		</p>
+		<p class="home__actions">
+			<p-button
+				label="Check API health"
+				icon="pi pi-heart"
+				[outlined]="true"
+				[loading]="healthLoading()"
+				[disabled]="healthLoading()"
+				(onClick)="checkApiHealth()"
+			/>
+		</p>
+		@if (healthError(); as err) {
+			<p class="home__api-result home__api-result--error" role="status">{{ err }}</p>
+		}
+		@if (healthResult(); as res) {
+			<dl class="home__api-result home__api-result--ok" role="status">
+				<dt>Envelope</dt>
+				<dd>{{ res.success ? 'success' : 'error' }} — {{ res.message }}</dd>
+				@if (res.data; as d) {
+					<dt>Status</dt>
+					<dd><code>{{ d.status }}</code></dd>
+					<dt>Service</dt>
+					<dd><code>{{ d.service }}</code></dd>
+					<dt>Checked at</dt>
+					<dd><code>{{ d.checkedAt }}</code></dd>
+				}
+			</dl>
+		}
+	</section>
 </section>
