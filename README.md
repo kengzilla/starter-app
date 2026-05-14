@@ -7,7 +7,7 @@ Angular 21 web app starter. No Ionic, no Capacitor — pure Angular for the brow
 - Angular 21 (standalone components)
 - Angular Router (lazy-loaded feature routes)
 - Angular Reactive Forms (add per feature)
-- Angular HttpClient (`provideHttpClient` in `app.config.ts`)
+- Angular HttpClient (`provideHttpClient(withInterceptors(...))` in `app.config.ts`; includes `requestIdInterceptor` for API calls)
 - **[PrimeNG 21](https://primeng.org)** — UI components (import per component from `primeng/...`, e.g. `primeng/button`)
 - **[@primeuix/themes](https://primeng.org/theming)** — Aura preset via `providePrimeNG` in `app.config.ts`
 - **primeicons** — icon font (imported in `src/styles.css`)
@@ -56,6 +56,10 @@ App runs at `http://localhost:4200` and redirects to **`/home`** (placeholder sh
 ## Proxy (development)
 
 `proxy.config.ts` forwards `/api` → `http://localhost:8080`. Use empty `apiUrl` in `environment.ts` so calls can target `/api/...` during `ng serve`.
+
+### `X-Request-Id` (correlation with the API)
+
+[`src/app/core/interceptors/request-id.interceptor.ts`](src/app/core/interceptors/request-id.interceptor.ts) adds a fresh **`X-Request-Id`** (`crypto.randomUUID()`) on each `HttpClient` request whose URL matches **`environment.requestIdUrlPrefixes`** (default **`['/api']`** for the dev proxy) or starts with non-empty **`environment.apiUrl`**. Add entries to `requestIdUrlPrefixes` (e.g. `/graphql`, `https://api.company.com`) when the app calls APIs outside `/api`. The starter API reads this header in `CorrelationIdFilter` and echoes it on the response so support can quote one id across browser and server logs. For full logging behaviour see **starter-api** [`docs/LOGGING_USE_CASES.md`](../starter-api/docs/LOGGING_USE_CASES.md).
 
 ## Run Tests
 
